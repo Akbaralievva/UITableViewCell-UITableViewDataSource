@@ -9,9 +9,17 @@ import UIKit
 
 class ViewController: UIViewController, UITableViewDataSource {
     
+    
+    
     private let tableView = UITableView()
+    
+    
+    private var contacts: [Contact] = []
+    
     private let idCell = "cell"
     private let idCell2 = "cell2"
+    
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -26,29 +34,59 @@ class ViewController: UIViewController, UITableViewDataSource {
         ])
         
         tableView.dataSource = self
+        tableView.separatorStyle = .none
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: idCell)
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: idCell2)
         
+        setData()
+    }
+    
+    
+    private func setData(){
+        contacts = [
+            Contact(name: "Jane Cooper", phoneNumber: "(270) 555-0117", image: "1"),
+            
+            Contact(name: "Devon Lane", phoneNumber: "(308) 555-0121", image: "2"),
+            
+            Contact(name: "Darrell Steward", phoneNumber: "(684) 555-0102", image: "3"),
+            
+            Contact(name: "Devon Lane", phoneNumber: "(704) 555-0127", image: "4"),
+            
+            Contact(name: "Courtney Henry", phoneNumber: "(505) 555-0125", image: "5"),
+            
+            Contact(name: "Wade Warren", phoneNumber: "(225) 555-0118", image: "6"),
+            
+            Contact(name: "Bessie Cooper", phoneNumber: "(406) 555-0120", image: "7"),
+            
+            Contact(name: "Robert Fox", phoneNumber: "(480) 555-0103", image: "8"),
+            
+            Contact(name: "Jacob Jones", phoneNumber: "(702) 555-0122", image: "9"),
+            
+            Contact(name: "Jenny Wilson", phoneNumber: "(239) 555-0108", image: "10")
+        ]
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 100
+        return contacts.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: idCell, for: indexPath)
+        let cell = UITableViewCell(style: .subtitle, reuseIdentifier: "")
         
-        if indexPath.row % 2 == 0 {
-            cell.textLabel?.text = "textLabel: \(indexPath.row)"
-            cell.imageView?.image = UIImage(systemName: "star")
-            return cell
-        } else {
-            let cell = tableView.dequeueReusableCell(withIdentifier: idCell2, for: indexPath)
-            cell.textLabel?.text = "textLable: \(indexPath.row)"
-            cell.imageView?.image = UIImage(systemName: "car")
-            return cell
+        let contact = contacts[indexPath.row]
+        
+        cell.textLabel?.text = contact.name
+        cell.detailTextLabel?.text = contact.phoneNumber
+        cell.imageView?.image = UIImage(named: contact.image)
+        
+        cell.layoutIfNeeded()
+        
+        if let imageView = cell.imageView {
+            imageView.layer.cornerRadius = imageView.frame.size.width / 2
+            imageView.clipsToBounds = true
         }
         
-      
+        return cell
     }
+    
 }

@@ -11,11 +11,11 @@ class LoginViewController: UIViewController {
     private lazy var loginBtn: UIButton = {
         let maker = MakerView()
         let button = maker.makerButton(title: "Login",
-                                        titleColor: .black,
-                                        titleFont: .boldSystemFont(ofSize: 23),
-                                        backgroundColor: .clear,
-                                        cornerRadius: 0,
-                                        translatesAutoresizingMaskIntoConstraints: false)
+                                       titleColor: .black,
+                                       titleFont: .boldSystemFont(ofSize: 23),
+                                       backgroundColor: .clear,
+                                       cornerRadius: 0,
+                                       translatesAutoresizingMaskIntoConstraints: false)
         
         let image = UIImage(systemName: "person")
         let tintedImage = image?.withTintColor(.black, renderingMode: .alwaysOriginal)
@@ -31,15 +31,16 @@ class LoginViewController: UIViewController {
     
     
     
-
+    
     private lazy var backgroundImageView: UIImageView = {
         let backgroundImage = UIImageView( image: UIImage( named: "backgroundImage"))
         backgroundImage.translatesAutoresizingMaskIntoConstraints = false
         return backgroundImage
     }()
-        
+    
     private lazy var entertextLbl = MakerView().makerLabel(text: "Enter Your Mobile Number", size: 19, weight: .bold, textColor: UIColor(named: "color")!)
-        
+    
+    private lazy var changeLbl = MakerView().makerLabel(text:"password must contain 12 or 13 numbers", textColor: .systemGray6)
     
     private lazy var mobileNumberTF = MakerView().makeTextField(placeholder: "Enter Number", backgroundColor: .white)
     
@@ -49,23 +50,23 @@ class LoginViewController: UIViewController {
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }()
-
-
+    
+    
     private lazy var loginButton: UIButton = {
         let button = MakerView().makerButton(title: "Login", titleColor: .white, titleFont: UIFont.systemFont(ofSize: 18, weight: .semibold), backgroundColor: UIColor(named: "color") ?? .orange, cornerRadius: 10)
         button.addTarget(self, action: #selector(loginButtonTapped), for: .touchUpInside)
         return button
     }()
-
+    
     
     private lazy var googleButton: UIButton = {
         let maker = MakerView()
         let button = maker.makerButton(title: "Google",
-                                        titleColor: .black,
-                                        titleFont: .boldSystemFont(ofSize: 18),
-                                        backgroundColor: .clear,
-                                        cornerRadius: 0,
-                                        translatesAutoresizingMaskIntoConstraints: false)
+                                       titleColor: .black,
+                                       titleFont: .boldSystemFont(ofSize: 18),
+                                       backgroundColor: .clear,
+                                       cornerRadius: 0,
+                                       translatesAutoresizingMaskIntoConstraints: false)
         
         let image = UIImage(systemName: "g.circle")
         let tintedImage = image?.withTintColor(UIColor(named: "color") ?? .tintColor, renderingMode: .alwaysOriginal)
@@ -76,8 +77,8 @@ class LoginViewController: UIViewController {
         button.addTarget(self, action: #selector(googleBtnTapped), for: .touchUpInside)
         return button
     }()
-
-
+    
+    
     private lazy var signupLbl = MakerView().makerLabel(text: "You Don’t have an account ?", size: 16, textColor: .systemGray )
     
     
@@ -87,8 +88,8 @@ class LoginViewController: UIViewController {
         return button
     }()
     
-
-
+    
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -136,6 +137,16 @@ class LoginViewController: UIViewController {
         ])
         
         
+        view.addSubview(changeLbl)
+        NSLayoutConstraint.activate([
+            changeLbl.topAnchor.constraint(equalTo: entertextLbl.topAnchor, constant: 50),
+            changeLbl.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            changeLbl.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            changeLbl.heightAnchor.constraint(equalToConstant: 15)
+        ])
+        
+        
+        
         view.addSubview(mobileNumberTF)
         NSLayoutConstraint.activate([
             mobileNumberTF.topAnchor.constraint(equalTo: entertextLbl.topAnchor, constant: 70),
@@ -163,7 +174,7 @@ class LoginViewController: UIViewController {
         NSLayoutConstraint.activate([
             googleButton.topAnchor.constraint(equalTo: loginButton.topAnchor, constant: 100),
             googleButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 100),
-            //googleButton.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            
             googleButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -100),
             googleButton.widthAnchor.constraint(equalToConstant: 200),
             googleButton.heightAnchor.constraint(equalToConstant: 30)
@@ -180,25 +191,55 @@ class LoginViewController: UIViewController {
         view.addSubview(signupBtn)
         NSLayoutConstraint.activate([
             signupBtn.topAnchor.constraint(equalTo: googleButton.topAnchor,constant: 100),
-             signupBtn.leadingAnchor.constraint(equalTo: signupLbl.leadingAnchor, constant: 210),
+            signupBtn.leadingAnchor.constraint(equalTo: signupLbl.leadingAnchor, constant: 210),
             signupBtn.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -70),
             signupBtn.heightAnchor.constraint(equalToConstant: 15 )
         ])
         
     }
-
     
     
     
-    @objc private func loginBtnTapped() {
+    
+    @objc private func loginButtonTapped() {
         
+        guard let phoneNumber = mobileNumberTF.text else {
+            mobileNumberTF.layer.borderColor = UIColor.red.cgColor
+            mobileNumberTF.placeholder = "Введите номер Кыргызстана"
+            return
+        }
+        
+        
+        if phoneNumber.hasPrefix("+996") && phoneNumber.count == 13 {
+            performLogin()
+        }  else if phoneNumber.hasPrefix("996") && phoneNumber.count == 12 {
+            performLogin()
+        }  else if phoneNumber.hasPrefix("070") && phoneNumber.count == 10 {
+            performLogin()
+        }  else if phoneNumber.hasPrefix("055") && phoneNumber.count == 10 {
+            performLogin()
+        }
+        else if phoneNumber.hasPrefix("077") && phoneNumber.count == 10 {
+            performLogin()
+        }
+        else {
+            mobileNumberTF.layer.borderColor = UIColor.red.cgColor
+            changeLbl.text = "Введите номер Кыргызстана"
+            changeLbl.textColor = .red
+        }
     }
+    
+    private func performLogin() {
+        let vc = ViewController()
+        navigationController?.pushViewController(vc, animated: true)
+    }
+    
     
     @objc private func changeNumberTapped(){
         
     }
     
-    @objc private func loginButtonTapped(){
+    @objc private func loginBtnTapped(){
         
     }
     
